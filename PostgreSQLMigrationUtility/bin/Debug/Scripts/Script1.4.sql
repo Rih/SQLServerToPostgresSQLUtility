@@ -8,7 +8,7 @@ begin
 
 	while @iterator <= LEN(@string)
 	begin
-		if PATINDEX('[ABCDEFGHIJKLMNOPQRSTUVWXYZ]', SUBSTRING(@string, @iterator, 1) COLLATE Latin1_General_CS_AI) <> 0
+		if PATINDEX('[ABCDEFGHIJKLMNOPQRSTUVWXYZ]', SUBSTRING(@string, @iterator, 1) COLLATE Latin1_General_100_CI_AS_SC_UTF8) <> 0
 		begin
 			set @string = STUFF(@string, @iterator, 0, '_');
 			set @iterator += 1;

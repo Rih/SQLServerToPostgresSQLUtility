@@ -210,8 +210,10 @@ namespace PostgreSQLMigrationUtility
                 {
                     xml.Append(dr[0]);
                 }
+                var tablesResult = xml.ToString();
+                var tablesCleaned = tablesResult.Replace("-", "_").Replace("smalldatetime", "date").Replace("á", "a").Replace("é", "e").Replace("í", "i").Replace("ó", "o").Replace("ú", "u").Replace("ñ", "n");
 
-                File.WriteAllText(settings.MigrationLocation + "/" + selectedDatabase + "/V0002__TablePatch.sql", xml.ToString());
+                File.WriteAllText(settings.MigrationLocation + "/" + selectedDatabase + "/V0002__TablePatch.sql", tablesCleaned);
                 backgroundWorker1.ReportProgress(11);
 
                 script = File.ReadAllText("Scripts/Script3.sql");
@@ -361,27 +363,27 @@ namespace PostgreSQLMigrationUtility
             }
             else if (e.ProgressPercentage == 2)
             {
-                txtlogs.Text += "Dependency 1 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 1 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 3)
             {
-                txtlogs.Text += "Dependency 2 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 2 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 4)
             {
-                txtlogs.Text += "Dependency 3 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 3 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 5)
             {
-                txtlogs.Text += "Dependency 4 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 4 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 6)
             {
-                txtlogs.Text += "Dependency 5 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 5 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 7)
             {
-                txtlogs.Text += "Dependency 6 delpoyed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+                txtlogs.Text += "Dependency 6 deployed: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
             else if (e.ProgressPercentage == 8)
             {
@@ -415,6 +417,10 @@ namespace PostgreSQLMigrationUtility
             {
                 txtlogs.Text += "Foreign key patch build complete: " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
             }
+            else
+            {
+                txtlogs.Text += "PROCCESS DONE!!! " + DateTime.Now.ToLongDateString() + " " + DateTime.Now.ToLongTimeString() + Environment.NewLine;
+            }
         }
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -426,9 +432,14 @@ namespace PostgreSQLMigrationUtility
         {
             if (chkSelectAll.Checked)
             {
+                string item = "";
                 for (int i = 0; i <= chkListObjects.Items.Count - 1; i++)
                 {
+                    item = chkListObjects.Items[i].ToString();
                     chkListObjects.SetItemChecked(i, true);
+                    if (item.Equals("[dbo].[include_table_list]") || item.Equals("[dbo].[sysdiagrams]") || item.Equals("[dbo].[tempQueries]") || item.Equals("[dbo].[tempQueriesCopy]")) {
+                        chkListObjects.SetItemChecked(i, false);
+                    }
                 }
             }
             else
